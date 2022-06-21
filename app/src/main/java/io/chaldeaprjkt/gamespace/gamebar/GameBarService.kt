@@ -57,6 +57,9 @@ class GameBarService : Hilt_GameBarService() {
     @Inject
     lateinit var screenUtils: ScreenUtils
 
+    @Inject
+    lateinit var danmakuService: DanmakuService
+
     private val wm by lazy { getSystemService(WINDOW_SERVICE) as WindowManager }
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
@@ -131,6 +134,7 @@ class GameBarService : Hilt_GameBarService() {
             .inflate(R.layout.window_util, frame, false)
         barView = rootBarView.findViewById(R.id.container_bar)
         menuSwitcher = rootBarView.findViewById(R.id.action_menu_switcher)
+        danmakuService.init()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -150,6 +154,7 @@ class GameBarService : Hilt_GameBarService() {
 
     override fun onDestroy() {
         onGameLeave()
+        danmakuService.destroy()
         super.onDestroy()
     }
 
@@ -164,6 +169,7 @@ class GameBarService : Hilt_GameBarService() {
         } else {
             dockCollapsedMenu()
         }
+        danmakuService.updateConfiguration(newConfig)
     }
 
     // for client service
